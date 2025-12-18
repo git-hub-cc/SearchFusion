@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SearchFusion - 全能聚合搜索</title>
+
+    <!-- 引入样式表 -->
+    <link rel="stylesheet" href="style.css">
+
+    <!-- 引入网站图标 -->
+    <link rel="icon" href="../assets/icon-48.png">
+
+    <!-- 预加载关键资源 -->
+    <link rel="preconnect" href="https://www.google.com">
+</head>
+<body>
+
+<!--
+  App 根容器
+  负责全局背景、模糊效果与主题切换
+-->
+<div id="app" class="app-container">
+
+    <!--
+      1. 左侧导航栏 (Sidebar)
+      桌面端：收缩式侧边栏 (默认只显示 Icon，Hover 展开)
+      移动端：抽屉式菜单 (点击汉堡按钮滑出)
+    -->
+    <aside class="sidebar collapsed" id="sidebar">
+        <!-- 品牌区域 -->
+        <div class="sidebar-header">
+            <div class="logo-area">
+                <span class="logo-icon">🚀</span>
+                <span class="brand-name">SearchFusion</span>
+            </div>
+            <!-- 移动端关闭按钮 -->
+            <button id="btn-close-sidebar" class="icon-btn mobile-only" title="关闭菜单">✕</button>
+        </div>
+
+        <!-- 导航列表容器 -->
+        <nav class="nav-scroll-area">
+            <ul class="nav-list" id="category-list">
+                <!-- 动态生成: <li class="nav-item active" data-cat="all"><span class="icon">🌟</span><span class="label">全部</span></li> -->
+            </ul>
+        </nav>
+
+        <!-- 底部工具栏 -->
+        <div class="sidebar-footer">
+            <!--
+                主题切换按钮
+                结构优化：使用 icons-wrapper 包裹图标以实现旋转动画，label 在展开时显示
+            -->
+            <button id="theme-toggle" class="theme-toggle-btn" title="切换显示模式">
+                <div class="icons-wrapper">
+                    <span class="icon-sun">☀️</span>
+                    <span class="icon-moon">🌙</span>
+                </div>
+                <span class="label">切换主题</span>
+            </button>
+        </div>
+    </aside>
+
+    <!-- 移动端遮罩层 -->
+    <div id="sidebar-overlay" class="overlay hidden"></div>
+
+    <!--
+      2. 主内容区 (Main Content)
+      包含：Hero Search、引擎网格、结果列表
+    -->
+    <main class="main-content">
+
+        <!-- 移动端顶部栏 (汉堡菜单) -->
+        <header class="mobile-header mobile-only">
+            <button id="btn-open-sidebar" class="icon-btn">☰</button>
+            <span class="mobile-title">SearchFusion</span>
+        </header>
+
+        <!--
+          核心搜索区 (Hero Section)
+          放置在视觉中心，带有光影效果
+        -->
+        <section class="hero-section">
+            <div class="search-container">
+                <div class="search-input-wrapper">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" id="search-input" placeholder="输入关键词，一键聚合全网..." autocomplete="off" autofocus>
+                    <!-- 快捷操作按钮组 (整合进输入框右侧) -->
+                    <div class="search-actions">
+                        <button id="btn-clear" class="action-icon hidden" title="清空">✕</button>
+                    </div>
+                </div>
+
+                <!-- 底部主操作栏 -->
+                <div class="hero-buttons">
+                    <button id="btn-fusion" class="hero-btn primary" title="在当前页面聚合展示结果">
+                        <span class="btn-icon">✨</span> 聚合搜索 <span id="fusion-count" class="badge hidden">0</span>
+                    </button>
+                    <button id="btn-launch" class="hero-btn secondary" title="在新标签页直接打开">
+                        <span class="btn-icon">🚀</span> 一键直达 <span id="launch-count" class="badge hidden">0</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 状态提示条 -->
+            <div id="status-bar" class="status-bar hidden">
+                <span class="spinner hidden"></span>
+                <span id="status-text">准备就绪</span>
+            </div>
+        </section>
+
+        <!--
+          内容切换容器
+          View 1: 引擎选择网格 (Bento Grid)
+          View 2: 聚合结果瀑布流 (Results)
+        -->
+        <div class="content-viewport">
+
+            <!-- 视图 1: 引擎网格 -->
+            <div id="engine-view" class="view-container active">
+                <!-- 动态生成: .category-group > h3 + .grid-container -->
+            </div>
+
+            <!-- 视图 2: 搜索结果 -->
+            <div id="results-view" class="view-container hidden">
+
+                <!-- 返回按钮 -->
+                <div class="results-header">
+                    <button id="btn-back" class="text-btn">← 返回选择引擎</button>
+                    <div class="results-stats">
+                        <span id="res-count-display">0</span> 个结果
+                    </div>
+                </div>
+
+                <!-- 骨架屏 (Loading) -->
+                <div id="skeleton" class="skeleton-container hidden">
+                    <div class="skeleton-card"></div>
+                    <div class="skeleton-card short"></div>
+                    <div class="skeleton-card"></div>
+                </div>
+
+                <!-- 结果列表 (Masonry / List) -->
+                <div id="results-container" class="results-grid">
+                    <!-- 动态生成 .result-card -->
+                </div>
+
+                <!-- 空状态 -->
+                <div id="empty-state" class="empty-state hidden">
+                    <div class="empty-icon">🍃</div>
+                    <p>暂无结果，请尝试其他关键词或引擎。</p>
+                </div>
+            </div>
+
+        </div>
+
+    </main>
+
+    <!--
+      全局通知 (Toast)
+    -->
+    <div id="toast-container" class="toast-container"></div>
+
+</div>
+
+<!-- 引入主逻辑 -->
+<script type="module" src="main.js"></script>
+</body>
+</html>

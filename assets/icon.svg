@@ -1,0 +1,27 @@
+<svg width='64' height='64' viewBox='0 0 64 64' fill='none' xmlns='http://www.w3.org/2000/svg'>
+    <style>
+        .bg-1 { fill: url(#grad-1); }
+        .shape { fill: white; fill-opacity: 0.95; }
+        .accent-1 { fill: #b3e5fc; } /* Light Blue Accent */
+        @media (prefers-color-scheme: dark) {
+        .bg-1 { fill: transparent; }
+        .shape { fill: #D1D5DB; }
+        .accent-1 { fill: #007ACC; }
+        }
+        /* Force dark mode for preview toggle */
+        body.dark-theme .bg-1 { fill: transparent; }
+        body.dark-theme .shape { fill: #D1D5DB; }
+        body.dark-theme .accent-1 { fill: #007ACC; }
+    </style>
+    <defs>
+        <linearGradient id='grad-1' x1='0' y1='0' x2='64' y2='64' gradientUnits='userSpaceOnUse'>
+            <stop stop-color='#007ACC'/>
+            <stop offset='1' stop-color='#009688'/>
+        </linearGradient>
+    </defs>
+    <rect width='64' height='64' rx='12' class='bg-1'/>
+    <!-- Magnifying Glass -->
+    <path fill-rule="evenodd" clip-rule="evenodd" d="M28 14C20.268 14 14 20.268 14 28C14 35.732 20.268 42 28 42C31.0967 42 33.9634 41.0064 36.3276 39.3178L45.5858 48.5759C46.3668 49.357 47.6332 49.357 48.4142 48.5759C49.1953 47.7949 49.1953 46.5285 48.4142 45.7475L39.2273 36.5606C41.1687 34.1565 42.2721 31.1578 42.1793 28.069C41.9287 19.7422 35.3278 14 28 14ZM18 28C18 22.4772 22.4772 18 28 18C33.5228 18 38 22.4772 38 28C38 33.5228 33.5228 38 28 38C22.4772 38 18 33.5228 18 28Z" class="shape"/>
+    <!-- Lens Reflection Accent -->
+    <path d="M32 21C31.4477 21 31 21.4477 31 22C31 24.7614 28.7614 27 26 27C25.4477 27 25 27.4477 25 28C25 28.5523 25.4477 29 26 29C29.866 29 33 25.866 33 22C33 21.4477 32.5523 21 32 21Z" class="accent-1"/>
+</svg>

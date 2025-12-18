@@ -1,0 +1,48 @@
+{
+  "manifest_version": 3,
+  "name": "SearchFusion - 全能聚合搜索",
+  "version": "2.0.0",
+  "description": "聚合100+搜索引擎，支持AI、影视、学术等多领域搜索，自动解析与一键直达。",
+  "icons": {
+    "16": "assets/icon-16.png",
+    "48": "assets/icon-48.png",
+    "128": "assets/icon-128.png"
+  },
+  "chrome_url_overrides": {
+    "newtab": "newtab/index.html"
+  },
+  "permissions": [
+    "tabs",
+    "scripting",
+    "storage"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "background": {
+    "service_worker": "background/serviceWorker.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": [
+        "utils/normalize.js",
+        "engines/generic.js",
+        "engines/google.js",
+        "engines/bing.js",
+        "engines/baidu.js",
+        "content-scripts/parser.js"
+      ],
+      "run_at": "document_end"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "assets/*",
+        "engines/*"
+      ],
+      "matches": ["<all_urls>"]
+    }
+  ]
+}
