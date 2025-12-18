@@ -191,7 +191,3 @@ MIT License
 ## 🙌 说明
 
 本项目仅用于学习与研究浏览器插件、搜索聚合与网络请求分析，请遵守各搜索引擎的使用条款。
-
----
-
-**SearchFusion — One Page, All Searches.** 🔍✨

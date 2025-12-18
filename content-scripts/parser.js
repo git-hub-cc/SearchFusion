@@ -73,7 +73,7 @@
             }));
 
             // 写入 Storage
-            const storageKey = `result_${searchId}_${btoa(sourceKey).slice(0, 10)}`; // 防止 Key 包含非法字符
+            const storageKey = `result_${searchId}_${btoa(encodeURIComponent(sourceKey)).slice(0, 10)}`;
             const storageData = {};
             storageData[storageKey] = results;
 
