@@ -27,28 +27,50 @@
     console.log(`[SearchFusion] 解析任务已启动: ID=${searchId}, 来源=${sourceKey}`);
 
     /**
-     * 3. 验证码与反爬虫检测
+     * 3. 验证码与反爬虫检测 (鲁棒性增强版)
      * @returns {boolean} - 如果检测到验证码或反爬机制，返回 true
      */
     function detectCaptcha() {
-        const pageText = document.body.innerText || "";
-        const captchaKeywords = ["traffic", "captcha", "验证码", "异常流量", "人机身份验证", "安全验证", "robot"];
+        const pageText = (document.body.innerText || "").toLowerCase();
+        const pageTitle = document.title.toLowerCase();
 
-        // 检查常见的 reCAPTCHA 等验证码框架的特征元素
-        const hasRecaptcha = document.getElementById('recaptcha') ||
+        // 关键词列表
+        const captchaKeywords = ["captcha", "验证码", "人机身份验证", "安全验证", "robot", "are you human"];
+        const titleKeywords = ["just a moment", "checking your browser", "security check", "人机验证", "安全检查"];
+
+        // --- 策略 1: 检测高置信度的特定元素 ---
+        const hasSpecificCaptchaElements =
+            document.getElementById('recaptcha') ||                 // Google reCAPTCHA
             document.querySelector('iframe[src*="recaptcha"]') ||
-            document.querySelector('.w-safety-verification'); // 百度安全验证
+            document.querySelector('iframe[src*="hcaptcha"]') ||    // hCaptcha
+            document.querySelector('.w-safety-verification') ||     // 百度安全验证
+            document.getElementById('challenge-form');              // Cloudflare 质询表单
 
-        // 策略：如果页面文本很短，并且包含验证码关键词，则很可能是验证码页面
-        const isSuspiciouslyShort = pageText.length < 1000;
-        const containsKeyword = captchaKeywords.some(kw => pageText.toLowerCase().includes(kw));
-
-        if (hasRecaptcha || (isSuspiciouslyShort && containsKeyword)) {
-            console.warn(`[SearchFusion] 在 ${sourceKey} 上检测到验证码或反爬虫页面。`);
+        if (hasSpecificCaptchaElements) {
+            console.warn(`[SearchFusion] 在 ${sourceKey} 上通过特定元素检测到验证码。`);
             return true;
         }
+
+        // --- 策略 2: 检测页面标题 ---
+        if (titleKeywords.some(kw => pageTitle.includes(kw))) {
+            console.warn(`[SearchFusion] 在 ${sourceKey} 上通过页面标题检测到验证码。`);
+            return true;
+        }
+
+        // --- 策略 3: 更严格的启发式检测 ---
+        // 真正的验证码页面通常同时满足：内容短、链接少、含关键词
+        const isSuspiciouslyShort = pageText.length < 800;
+        const hasVeryFewLinks = document.links.length < 10;
+        const containsKeyword = captchaKeywords.some(kw => pageText.includes(kw));
+
+        if (isSuspiciouslyShort && hasVeryFewLinks && containsKeyword) {
+            console.warn(`[SearchFusion] 在 ${sourceKey} 上通过启发式规则检测到验证码 (内容短、链接少、含关键词)。`);
+            return true;
+        }
+
         return false;
     }
+
 
     /**
      * 4. 执行解析策略
@@ -63,21 +85,31 @@
 
         let results = [];
         const Engines = window.SearchFusionEngines || {};
+        const hostname = window.location.hostname;
 
         // --- 解析器路由 ---
         // 根据当前页面的 hostname，选择合适的专用解析器
-        if (window.location.hostname.includes('google.') && Engines.google) {
+        if (hostname.includes('google.') && Engines.google) {
             console.log('[SearchFusion] 使用 Google 专用解析器');
             results = Engines.google.parse();
-        } else if (window.location.hostname.includes('bing.com') && Engines.bing) {
+        } else if (hostname.includes('bing.com') && Engines.bing) {
             console.log('[SearchFusion] 使用 Bing 专用解析器');
             results = Engines.bing.parse();
-        } else if (window.location.hostname.includes('baidu.com') && Engines.baidu) {
+        } else if (hostname.includes('baidu.com') && Engines.baidu) {
             console.log('[SearchFusion] 使用 Baidu 专用解析器');
             results = Engines.baidu.parse();
-        } else if (window.location.hostname.includes('so.toutiao.com') && Engines.toutiao) {
+        } else if (hostname.includes('so.toutiao.com') && Engines.toutiao) {
             console.log('[SearchFusion] 使用 Toutiao 专用解析器');
             results = Engines.toutiao.parse();
+        } else if (hostname.includes('tool.liumingye.cn') && Engines.liumingye) {
+            console.log('[SearchFusion] 使用 LiuMingYe 专用解析器');
+            results = Engines.liumingye.parse();
+        } else if (hostname.includes('gatherfind.com') && Engines.gatherfind) {
+            console.log('[SearchFusion] 使用 Gatherfind 专用解析器');
+            results = Engines.gatherfind.parse();
+        } else if (hostname.includes('nav.sbkko.com') && Engines.sbkko) {
+            console.log('[SearchFusion] 使用 Sbkko 专用解析器');
+            results = Engines.sbkko.parse();
         } else if (Engines.generic) {
             // 如果没有匹配的专用解析器，则使用通用解析器作为备用
             console.log('[SearchFusion] 使用通用解析器');

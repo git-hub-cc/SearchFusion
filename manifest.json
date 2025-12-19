@@ -32,6 +32,9 @@
         "engines/parser/bing.js",
         "engines/parser/baidu.js",
         "engines/parser/toutiao.js",
+        "engines/parser/liumingye.js",
+        "engines/parser/gatherfind.js",
+        "engines/parser/sbkko.js",
         "content-scripts/parser.js"
       ],
       "run_at": "document_end"
