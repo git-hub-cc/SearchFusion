@@ -14,7 +14,7 @@ export async function loadEngineConfig() {
     if (cachedConfig) return cachedConfig;
 
     try {
-        const url = chrome.runtime.getURL('assets/engines.json');
+        const url = chrome.runtime.getURL('engines/engines.json');
         const response = await fetch(url);
         if (!response.ok) throw new Error('Failed to load engines.json');
 

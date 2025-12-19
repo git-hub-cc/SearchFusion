@@ -28,9 +28,10 @@
       "js": [
         "utils/normalize.js",
         "engines/generic.js",
-        "engines/google.js",
-        "engines/bing.js",
-        "engines/baidu.js",
+        "engines/parser/google.js",
+        "engines/parser/bing.js",
+        "engines/parser/baidu.js",
+        "engines/parser/toutiao.js",
         "content-scripts/parser.js"
       ],
       "run_at": "document_end"

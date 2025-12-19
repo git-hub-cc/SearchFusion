@@ -46,11 +46,11 @@
   ],
   "engines": {
     "ai": [
-      {"name": "AI Studio", "url": "https://aistudio.google.com/prompts/new_chat?prompt=%s", "proxy": true, "desc": "Google AI Studio"},
-      {"name": "ChatGPT", "url": "https://chatgpt.com/?prompt=%s", "proxy": true, "desc": "OpenAI 新版交互式查询，融合 GPT 结果与网页引用。"},
-      {"name": "秘塔搜索", "url": "https://metaso.cn/?q=%s", "proxy": false, "desc": "无广告的 AI 搜索引擎，提供结构化信息整理。"},
-      {"name": "Perplexity", "url": "https://www.perplexity.ai/search?q=%s", "proxy": true, "desc": "结合 GPT 的智能对话式搜索，提供精准引用来源。"},
-      {"name": "You.com", "url": "https://you.com/search?q=%s", "proxy": true, "desc": "AI 驱动的问答式搜索，支持插件与多模式信息展示。"}
+      {"name": "AI Studio", "url": "https://aistudio.google.com/prompts/new_chat?prompt=%s", "proxy": true, "desc": "Google AI Studio", "parsable": false},
+      {"name": "ChatGPT", "url": "https://chatgpt.com/?prompt=%s", "proxy": true, "desc": "OpenAI 新版交互式查询，融合 GPT 结果与网页引用。", "parsable": false},
+      {"name": "秘塔搜索", "url": "https://metaso.cn/?q=%s", "proxy": false, "desc": "无广告的 AI 搜索引擎，提供结构化信息整理。", "parsable": false},
+      {"name": "Perplexity", "url": "https://www.perplexity.ai/search?q=%s", "proxy": true, "desc": "结合 GPT 的智能对话式搜索，提供精准引用来源。", "parsable": false},
+      {"name": "You.com", "url": "https://you.com/search?q=%s", "proxy": true, "desc": "AI 驱动的问答式搜索，支持插件与多模式信息展示。", "parsable": false}
     ],
     "search": [
       {"name": "谷歌", "url": "https://www.google.com/search?q=%s", "proxy": true, "desc": "全球最大的搜索引擎，索引全面，技术领先。"},
@@ -61,7 +61,6 @@
       {"name": "Yandex", "url": "https://yandex.com/search/?text=%s", "proxy": false, "desc": "俄罗斯搜索巨头，擅长图片、地图与本地化内容。"},
       {"name": "搜狗", "url": "https://www.sogou.com/web?query=%s", "proxy": false, "desc": "腾讯旗下，独家支持微信公众号与文章搜索。"},
       {"name": "360搜索", "url": "https://www.so.com/s?q=%s", "proxy": false, "desc": "侧重安全防护，拦截恶意网站的综合搜索。"},
-      {"name": "知乎", "url": "https://www.zhihu.com/search?q=%s", "proxy": false, "desc": "高质量中文问答社区，搜索专业知识与经验分享。"},
       {"name": "微信", "url": "https://weixin.sogou.com/weixin?p=01030402&query=%s&type=2&ie=utf8", "proxy": false, "desc": "搜狗提供的微信生态内文章、公众号及朋友圈搜索。"},
       {"name": "今日头条", "url": "https://www.toutiao.com/search/?keyword=%s", "proxy": false, "desc": "基于算法推荐的新闻资讯聚合与热点搜索。"}
     ],

@@ -1,5 +1,5 @@
 /**
- * engines/google.js
+ * engines/parser/google.js
  * Google 专用解析器
  */
 (function (global) {

@@ -1,5 +1,5 @@
 /**
- * engines/baidu.js
+ * engines/parser/baidu.js
  * 百度专用解析器
  */
 (function (global) {

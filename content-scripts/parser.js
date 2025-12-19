@@ -1,47 +1,61 @@
 /**
  * content-scripts/parser.js
  * 页面解析主控制器 - 路由分发版
- * 根据域名或 URL 参数，将任务分发给 专用解析器 或 通用解析器
+ * 脚本在 document_end 时注入，根据当前页面的 URL 特征，
+ * 将解析任务分发给对应的专用解析器（如 google.js）或通用解析器（generic.js）。
  */
 
 (function () {
+    // 确保工具函数已加载
     const utils = window.SearchFusionUtils;
     if (!utils) return;
 
     // 1. 任务身份核验
-    // 只有 URL 中包含 sf_id 参数的页面才会被视为插件发起的后台任务
+    // 只有 URL 中包含 'sf_id' 参数的页面才被视为插件发起的后台搜索任务
     const searchId = utils.getUrlParam('sf_id');
     if (!searchId) {
-        // 非插件任务，静默退出，不干扰用户正常浏览
+        // 如果不是插件任务，则静默退出，不执行任何操作，以免干扰用户正常浏览
         return;
     }
 
-    // 获取引擎标识 (优先从 URL 参数获取，这是我们在 config.js 中构建的)
-    // 如果 URL 中没有，则尝试通过 hostname 推断
+    // 2. 获取引擎标识
+    // 优先从 URL 参数 'sf_engine' 获取，这是在 background 中构建 URL 时添加的
+    // 如果 URL 中没有，则尝试通过 hostname 推断，作为备用方案
     let sourceKey = utils.getUrlParam('sf_engine') || window.location.hostname;
-    // 简单解码
-    sourceKey = decodeURIComponent(sourceKey);
+    sourceKey = decodeURIComponent(sourceKey); // 解码引擎名称，例如 "今日头条"
 
-    console.log(`[SearchFusion] Task Detected: ID=${searchId}, Source=${sourceKey}`);
+    console.log(`[SearchFusion] 解析任务已启动: ID=${searchId}, 来源=${sourceKey}`);
 
-    // 2. 验证码与反爬检测
+    /**
+     * 3. 验证码与反爬虫检测
+     * @returns {boolean} - 如果检测到验证码或反爬机制，返回 true
+     */
     function detectCaptcha() {
         const pageText = document.body.innerText || "";
-        const captchaKeywords = ["traffic", "captcha", "验证码", "异常流量", "人机身份验证", "安全验证"];
+        const captchaKeywords = ["traffic", "captcha", "验证码", "异常流量", "人机身份验证", "安全验证", "robot"];
 
-        // 特征元素检测
+        // 检查常见的 reCAPTCHA 等验证码框架的特征元素
         const hasRecaptcha = document.getElementById('recaptcha') ||
             document.querySelector('iframe[src*="recaptcha"]') ||
-            document.querySelector('.w-safety-verification');
+            document.querySelector('.w-safety-verification'); // 百度安全验证
 
-        if (hasRecaptcha || (pageText.length < 1000 && captchaKeywords.some(kw => pageText.includes(kw)))) {
+        // 策略：如果页面文本很短，并且包含验证码关键词，则很可能是验证码页面
+        const isSuspiciouslyShort = pageText.length < 1000;
+        const containsKeyword = captchaKeywords.some(kw => pageText.toLowerCase().includes(kw));
+
+        if (hasRecaptcha || (isSuspiciouslyShort && containsKeyword)) {
+            console.warn(`[SearchFusion] 在 ${sourceKey} 上检测到验证码或反爬虫页面。`);
             return true;
         }
         return false;
     }
 
-    // 3. 执行解析策略
+    /**
+     * 4. 执行解析策略
+     * 这是核心的路由和执行函数
+     */
     function executeExtraction() {
+        // 首先进行验证码检测，如果检测到，则发送消息给 background 并中止解析
         if (detectCaptcha()) {
             chrome.runtime.sendMessage({ type: 'CAPTCHA_DETECTED', source: sourceKey, searchId });
             return;
@@ -50,35 +64,43 @@
         let results = [];
         const Engines = window.SearchFusionEngines || {};
 
-        // 策略路由
+        // --- 解析器路由 ---
+        // 根据当前页面的 hostname，选择合适的专用解析器
         if (window.location.hostname.includes('google.') && Engines.google) {
+            console.log('[SearchFusion] 使用 Google 专用解析器');
             results = Engines.google.parse();
         } else if (window.location.hostname.includes('bing.com') && Engines.bing) {
+            console.log('[SearchFusion] 使用 Bing 专用解析器');
             results = Engines.bing.parse();
         } else if (window.location.hostname.includes('baidu.com') && Engines.baidu) {
+            console.log('[SearchFusion] 使用 Baidu 专用解析器');
             results = Engines.baidu.parse();
+        } else if (window.location.hostname.includes('so.toutiao.com') && Engines.toutiao) {
+            console.log('[SearchFusion] 使用 Toutiao 专用解析器');
+            results = Engines.toutiao.parse();
         } else if (Engines.generic) {
-            // 对于没有专用脚本的 100+ 个网站，使用通用解析器
-            console.log('[SearchFusion] Using Generic Parser');
+            // 如果没有匹配的专用解析器，则使用通用解析器作为备用
+            console.log('[SearchFusion] 使用通用解析器');
             results = Engines.generic.parse();
         }
 
-        // 4. 数据回传与清理
+        // 5. 数据回传与清理
         if (results && results.length > 0) {
-            // 注入任务元数据
+            // 为每个结果对象注入任务元数据
             results = results.map(item => ({
                 ...item,
                 searchId: searchId,
-                source: sourceKey // 保持与分类中的名称一致
+                source: sourceKey
             }));
 
-            // 写入 Storage
+            // 使用唯一的键名将结果存入 storage，避免多引擎同时写入时发生冲突
+            // 格式：result_任务ID_引擎名Base64截断
             const storageKey = `result_${searchId}_${btoa(encodeURIComponent(sourceKey)).slice(0, 10)}`;
-            const storageData = {};
-            storageData[storageKey] = results;
+            const storageData = { [storageKey]: results };
 
+            // 将结果写入 local storage，并通知 background 任务完成
             chrome.storage.local.set(storageData, () => {
-                console.log(`[SearchFusion] Saved ${results.length} results. Requesting close.`);
+                console.log(`[SearchFusion] 已保存 ${results.length} 条来自 ${sourceKey} 的结果。请求关闭标签页。`);
                 chrome.runtime.sendMessage({
                     type: 'EXTRACTION_COMPLETE',
                     source: sourceKey,
@@ -87,22 +109,29 @@
                 });
             });
         } else {
-            // 未提取到结果（可能是加载慢，也可能是非文本类网站）
-            // 在通用模式下，不强制关闭空结果 Tab，留给用户查看
-            console.log('[SearchFusion] No structured results found.');
+            // 如果没有提取到任何结构化结果
+            console.log(`[SearchFusion] 在 ${sourceKey} 未找到可解析的结果。`);
+            // 此处可以发送一个 'NO_RESULTS_FOUND' 消息，但目前保持静默
         }
     }
 
-    // 5. 启动时机控制
-    // 尝试立即执行
-    if (document.readyState === 'complete' || document.readyState === 'interactive') {
-        setTimeout(executeExtraction, 500); // 稍作延迟等待动态内容
-    } else {
-        window.addEventListener('DOMContentLoaded', () => setTimeout(executeExtraction, 500));
-        window.addEventListener('load', () => setTimeout(executeExtraction, 500));
+    /**
+     * 6. 启动时机控制
+     * 确保页面内容完全加载后再执行解析，特别是针对像今日头条这样依赖 <script> 内嵌数据的网站。
+     */
+    function scheduleExtraction() {
+        // 如果页面已经加载完成
+        if (document.readyState === 'complete') {
+            setTimeout(executeExtraction, 500); // 稍作延迟，等待可能的动态内容渲染
+        } else {
+            // 否则，监听 'load' 事件
+            window.addEventListener('load', () => setTimeout(executeExtraction, 500));
+        }
+
+        // 创建一个最终的兜底执行，防止 'load' 事件因某些原因未触发
+        setTimeout(executeExtraction, 5000);
     }
 
-    // 兜底：如果页面很慢，5秒后再试一次
-    setTimeout(executeExtraction, 5000);
+    scheduleExtraction();
 
 })();

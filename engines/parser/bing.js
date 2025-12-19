@@ -1,5 +1,5 @@
 /**
- * engines/bing.js
+ * engines/parser/bing.js
  * Bing 专用解析器
  */
 (function (global) {
