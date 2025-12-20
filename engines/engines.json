@@ -1,7 +1,7 @@
 {
   "categories": [
-    {"label": "AI", "value": "ai", "icon": "🤖"},
     {"label": "搜索", "value": "search", "icon": "🔍"},
+    {"label": "AI", "value": "ai", "icon": "🤖"},
     {"label": "导航", "value": "nav", "icon": "🧭"},
     {"label": "网盘", "value": "pan_search", "icon": "🗂️"},
     {"label": "磁力", "value": "bt", "icon": "🧲"},
@@ -45,18 +45,10 @@
     {"label": "CSE", "value": "cse", "icon": "🔍"}
   ],
   "engines": {
-    "ai": [
-      {"name": "AI Studio", "url": "https://aistudio.google.com/prompts/new_chat?prompt=%s", "proxy": true, "desc": "Google AI Studio", "parsable": false},
-      {"name": "ChatGPT", "url": "https://chatgpt.com/?prompt=%s", "proxy": true, "desc": "OpenAI 新版交互式查询，融合 GPT 结果与网页引用。", "parsable": false},
-      {"name": "秘塔搜索", "url": "https://metaso.cn/?q=%s", "proxy": false, "desc": "无广告的 AI 搜索引擎，提供结构化信息整理。", "parsable": false},
-      {"name": "Perplexity", "url": "https://www.perplexity.ai/search?q=%s", "proxy": true, "desc": "结合 GPT 的智能对话式搜索，提供精准引用来源。", "parsable": false},
-      {"name": "You.com", "url": "https://you.com/search?q=%s", "proxy": true, "desc": "AI 驱动的问答式搜索，支持插件与多模式信息展示。", "parsable": false}
-    ],
     "search": [
       {"name": "谷歌", "url": "https://www.google.com/search?q=%s", "proxy": true, "desc": "全球最大的搜索引擎，索引全面，技术领先。", "parsable": true},
       {"name": "百度", "url": "https://www.baidu.com/s?wd=%s", "proxy": false, "desc": "全球最大的中文搜索引擎，更懂中国互联网。", "parsable": true},
       {"name": "必应", "url": "https://www.bing.com/search?q=%s&PC=U316&FORM=CHROMN", "proxy": false, "desc": "微软出品，国际版搜索质量高，深度整合 AI 功能。", "parsable": true},
-      {"name": "夸克", "url": "https://quark.sm.cn/s?q=%s", "proxy": false, "desc": "阿里巴巴旗下智能搜索，资源整合能力强。", "parsable": true},
       {"name": "DuckDuckGo", "url": "https://duckduckgo.com/?q=%s", "proxy": true, "desc": "主打隐私保护，承诺不追踪用户数据的搜索引擎。", "parsable": true},
       {"name": "Yandex", "url": "https://yandex.com/search/?text=%s", "proxy": false, "desc": "俄罗斯搜索巨头，擅长图片、地图与本地化内容。", "parsable": true},
       {"name": "搜狗", "url": "https://www.sogou.com/web?query=%s", "proxy": false, "desc": "腾讯旗下，独家支持微信公众号与文章搜索。", "parsable": true},
@@ -64,46 +56,50 @@
       {"name": "微信", "url": "https://weixin.sogou.com/weixin?p=01030402&query=%s&type=2&ie=utf8", "proxy": false, "desc": "搜狗提供的微信生态内文章、公众号及朋友圈搜索。", "parsable": true},
       {"name": "今日头条", "url": "https://www.toutiao.com/search/?keyword=%s", "proxy": false, "desc": "基于算法推荐的新闻资讯聚合与热点搜索。", "parsable": true}
     ],
+    "ai": [
+      {"name": "AI Studio", "url": "https://aistudio.google.com/prompts/new_chat?prompt=%s", "proxy": true, "desc": "Google AI Studio", "parsable": false},
+      {"name": "ChatGPT", "url": "https://chatgpt.com/?prompt=%s", "proxy": true, "desc": "OpenAI 新版交互式查询，融合 GPT 结果与网页引用。", "parsable": false},
+      {"name": "秘塔搜索", "url": "https://metaso.cn/?q=%s", "proxy": false, "desc": "无广告的 AI 搜索引擎，提供结构化信息整理。", "parsable": false},
+      {"name": "Perplexity", "url": "https://www.perplexity.ai/search?q=%s", "proxy": true, "desc": "结合 GPT 的智能对话式搜索，提供精准引用来源。", "parsable": false},
+      {"name": "You.com", "url": "https://you.com/search?q=%s", "proxy": true, "desc": "AI 驱动的问答式搜索，支持插件与多模式信息展示。", "parsable": false}
+    ],
     "nav": [
-      {"name": "刘明野", "url": "https://tool.liumingye.cn/search/%s/", "proxy": false, "desc": "老牌实用的在线工具与资源聚合导航。", "parsable": false},
+      {"name": "刘明野", "url": "https://tool.liumingye.cn/search/%s/", "proxy": false, "desc": "老牌实用的在线工具与资源聚合导航。", "parsable": true},
       {"name": "SBKKO", "url": "https://nav.sbkko.com/?post_type=sites&s=%s", "proxy": false, "desc": "专注于收录优质实用网站的极简导航。", "parsable": true},
       {"name": "gatherfind", "url": "https://www.gatherfind.com/search.php?q=%s", "proxy": false, "desc": "聚合多种搜索源的极简起始页。", "parsable": true},
       {"name": "酷库博客", "url": "https://www.zxki.cn/?keyword=%s", "proxy": false, "desc": "收录工具、软件、效率、资源等综合导航平台。", "parsable": true}
     ],
     "pan_search": [
-      {"name": "小云搜", "url": "https://www.yunso.net/index/user/s?wd=%s", "proxy": false, "desc": "专注于百度网盘资源的聚合搜索。"},
+      {"name": "小云搜", "url": "https://www.yunso.net/index/user/s?wd=%s", "proxy": false, "desc": "专注于百度网盘资源的聚合搜索。", "parsable": false},
       {"name": "学霸盘", "url": "https://www.xuebapan.com/s/%s-1.html", "proxy": false, "desc": "侧重于考研、学习资料的网盘资源搜索。", "parsable": true},
-      {"name": "大力盘", "url": "https://www.dalipan.com/#/main/search?keyword=%s&restype=0", "proxy": true, "desc": "专业的网盘资源搜索工具，支持多网盘。"},
-      {"name": "猫狸盘搜", "url": "https://www.alipansou.com/search?k=%s", "proxy": false, "desc": "专注于阿里云盘资源的第三方搜索。"},
-      {"name": "大圣盘", "url": "https://www.dashengpan.com/#/main/search?keyword=%s&restype=0", "proxy": false, "desc": "综合性网盘搜索，资源更新较快。"},
-      {"name": "pansearch", "url": "https://www.pansearch.me/search?keyword=%s&pan=aliyundrive", "proxy": true, "desc": "界面简洁的阿里云盘资源搜索引擎。"},
-      {"name": "up云搜", "url": "https://www.upyunso.com/search?keyword=%s&pan_channel=ali", "proxy": false, "desc": "聚合多个阿里云盘资源频道的搜索。"},
-      {"name": "小马盘", "url": "https://www.xiaomapan.com/#/main/search?keyword=%s&restype=0", "proxy": false, "desc": "综合类网盘资源搜索，涵盖多种文件类型。"},
-      {"name": "飞猪盘", "url": "https://www.feizhupan.com/#/main/search?keyword=%s&restype=0", "proxy": false, "desc": "支持百度网盘与阿里云盘的资源搜索。"},
-      {"name": "夸克小站", "url": "https://pioz.cn/search?q=%s", "proxy": false, "desc": "专门针对夸克网盘资源的分享社区。"},
-      {"name": "小宇搜索", "url": "https://xykmovie.com/s/1/%s", "proxy": false, "desc": "综合性资源搜索，支持影视与软件。"}
+      {"name": "大力盘", "url": "https://www.dalipan.com/#/main/search?keyword=%s&restype=0", "proxy": true, "desc": "专业的网盘资源搜索工具，支持多网盘。", "parsable": false},
+      {"name": "猫狸盘搜", "url": "https://www.alipansou.com/search?k=%s", "proxy": false, "desc": "专注于阿里云盘资源的第三方搜索。", "parsable": false},
+      {"name": "大圣盘", "url": "https://www.dashengpan.com/#/main/search?keyword=%s&restype=0", "proxy": false, "desc": "综合性网盘搜索，资源更新较快。", "parsable": false},
+      {"name": "pansearch", "url": "https://www.pansearch.me/search?keyword=%s&pan=aliyundrive", "proxy": true, "desc": "界面简洁的阿里云盘资源搜索引擎。", "parsable": true},
+      {"name": "up云搜", "url": "https://www.upyunso.com/search?keyword=%s&pan_channel=ali", "proxy": false, "desc": "聚合多个阿里云盘资源频道的搜索。", "parsable": true},
+      {"name": "小马盘", "url": "https://www.xiaomapan.com/#/main/search?keyword=%s&restype=0", "proxy": false, "desc": "综合类网盘资源搜索，涵盖多种文件类型。", "parsable": false},
+      {"name": "飞猪盘", "url": "https://www.feizhupan.com/#/main/search?keyword=%s&restype=0", "proxy": false, "desc": "支持百度网盘与阿里云盘的资源搜索。", "parsable": false},
+      {"name": "夸克小站", "url": "https://pioz.cn/search?q=%s", "proxy": false, "desc": "专门针对夸克网盘资源的分享社区。", "parsable": true},
+      {"name": "小宇搜索", "url": "https://xykmovie.com/s/1/%s", "proxy": false, "desc": "综合性资源搜索，支持影视与软件。", "parsable": true}
     ],
     "bt": [
-      {"name": "海盗湾_1", "url": "https://thepiratebay11.com/search/%s/1/99/0", "proxy": false, "desc": "全球最著名的老牌 BT 种子搜索网站。"},
-      {"name": "海盗湾_2", "url": "https://thepiratebay10.xyz/search/%s/1/99/0", "proxy": false, "desc": "海盗湾的镜像站点之一，保持资源同步。"},
-      {"name": "RARBG", "url": "https://rargb.to/search/?search=%s", "proxy": false, "desc": "以高质量影视资源著称的种子站（存档查询）。"},
-      {"name": "无极磁链", "url": "https://xcili.net/search?q=%s", "proxy": false, "desc": "索引量大的磁力链接搜索引擎。"},
-      {"name": "rutracker", "url": "https://rutracker.org/forum/login.php?redirect=tracker.php?nm=%s", "proxy": true, "desc": "俄罗斯最大的资源论坛，无损音乐和冷门资源圣地。"},
-      {"name": "katcr", "url": "https://katcr.to/usearch/%s/", "proxy": true, "desc": "Kickass Torrents 的复活或镜像站。"},
-      {"name": "btchichi", "url": "https://tainanle8.btchichi.hair/search.html?name=%s", "proxy": false, "desc": "专注于日语资源的 BT 搜索引擎。"},
+      {"name": "海盗湾_1", "url": "https://thepiratebay11.com/search/%s/1/99/0", "proxy": false, "desc": "全球最著名的老牌 BT 种子搜索网站。", "parsable": true},
+      {"name": "海盗湾_2", "url": "https://thepiratebay10.xyz/search/%s/1/99/0", "proxy": false, "desc": "海盗湾的镜像站点之一，保持资源同步。", "parsable": true},
+      {"name": "RARBG", "url": "https://rargb.to/search/?search=%s", "proxy": false, "desc": "以高质量影视资源著称的种子站（存档查询）。", "parsable": true},
+      {"name": "无极磁链", "url": "https://xcili.net/search?q=%s", "proxy": false, "desc": "索引量大的磁力链接搜索引擎。", "parsable": true},
       {"name": "东京图书馆", "url": "https://www.tokyotosho.info/search.php?terms=%s", "proxy": true, "desc": "专注于 ACG 资源的发布与索引站。", "parsable": true},
       {"name": "ACG", "url": "https://acg.rip/?term=%s", "proxy": true, "desc": "国内知名的动漫资源 BT 发布站。", "parsable": true}
     ],
     "video": [
-      {"name": "YouTube", "url": "https://www.youtube.com/results?search_query=%s", "proxy": true, "desc": "全球最大的视频分享与创作平台。"},
-      {"name": "B站", "url": "https://search.bilibili.com/all?keyword=%s", "proxy": false, "desc": "国内最大的二次元及年轻人潮流文化社区。"},
-      {"name": "抖音", "url": "https://www.douyin.com/search/%s", "proxy": false, "desc": "极其流行的短视频分享平台，记录美好生活。"},
-      {"name": "芒果TV", "url": "https://so.mgtv.com/so?k=%s", "proxy": false, "desc": "湖南卫视旗下视频平台，综艺资源丰富。"},
-      {"name": "腾讯视频", "url": "https://v.qq.com/x/search/?q=%s", "proxy": false, "desc": "腾讯旗下综合视频平台，独家剧集众多。"},
-      {"name": "优酷", "url": "https://www.soku.com/search_video/q_%s", "proxy": false, "desc": "阿里旗下视频平台，经典老剧与独家综艺丰富。"},
-      {"name": "TikTok", "url": "https://www.tiktok.com/search?q=%s", "proxy": true, "desc": "国际版短视频平台，全球流行文化内容聚集地。"},
-      {"name": "A站", "url": "https://www.acfun.cn/search/?type=complex&keyword=%s", "proxy": false, "desc": "AcFun，中国弹幕视频网站鼻祖，硬核二次元。"},
-      {"name": "Vimeo", "url": "https://vimeo.com/search?q=%s", "proxy": true, "desc": "专注于高清、艺术与创意视频的分享平台。"}
+      {"name": "YouTube", "url": "https://www.youtube.com/results?search_query=%s", "proxy": true, "desc": "全球最大的视频分享与创作平台。", "parsable": true},
+      {"name": "B站", "url": "https://search.bilibili.com/all?keyword=%s", "proxy": false, "desc": "国内最大的二次元及年轻人潮流文化社区。", "parsable": true},
+      {"name": "抖音", "url": "https://www.douyin.com/search/%s", "proxy": false, "desc": "极其流行的短视频分享平台，记录美好生活。", "parsable": false},
+      {"name": "芒果TV", "url": "https://so.mgtv.com/so?k=%s", "proxy": false, "desc": "湖南卫视旗下视频平台，综艺资源丰富。", "parsable": false},
+      {"name": "腾讯视频", "url": "https://v.qq.com/x/search/?q=%s", "proxy": false, "desc": "腾讯旗下综合视频平台，独家剧集众多。", "parsable": false},
+      {"name": "优酷", "url": "https://www.soku.com/search_video/q_%s", "proxy": false, "desc": "阿里旗下视频平台，经典老剧与独家综艺丰富。", "parsable": false},
+      {"name": "TikTok", "url": "https://www.tiktok.com/search?q=%s", "proxy": true, "desc": "国际版短视频平台，全球流行文化内容聚集地。", "parsable": false},
+      {"name": "A站", "url": "https://www.acfun.cn/search/?type=complex&keyword=%s", "proxy": false, "desc": "AcFun，中国弹幕视频网站鼻祖，硬核二次元。", "parsable": true},
+      {"name": "Vimeo", "url": "https://vimeo.com/search?q=%s", "proxy": true, "desc": "专注于高清、艺术与创意视频的分享平台。", "parsable": false}
     ],
     "movie_review": [
       {"name": "豆瓣", "url": "https://www.douban.com/search?q=%s", "proxy": false, "desc": "中国最具影响力的书影音评分与评论社区。"},

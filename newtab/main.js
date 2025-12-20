@@ -118,8 +118,21 @@ function renderEngineGrid(category) {
         : state.config.categories.filter(c => c.value === category);
 
     catsToShow.forEach(cat => {
-        const engines = state.config.engines[cat.value];
+        let engines = state.config.engines[cat.value];
         if (!engines || engines.length === 0) return;
+
+        // [新增逻辑] 排序：将可聚合解析 (parsable !== false) 的引擎排在前面
+        // 使用 [...engines] 创建副本以免修改原始配置顺序
+        engines = [...engines].sort((a, b) => {
+            const aParsable = a.parsable !== false;
+            const bParsable = b.parsable !== false;
+            // 如果 a 可解析 b 不可，a 排前 (-1)
+            // 如果 a 不可解析 b 可，b 排前 (1)
+            // 否则保持原序 (0)
+            if (aParsable && !bParsable) return -1;
+            if (!aParsable && bParsable) return 1;
+            return 0;
+        });
 
         const group = document.createElement('div');
         group.className = 'category-group';

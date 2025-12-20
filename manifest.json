@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "SearchFusion - 全能聚合搜索",
-  "version": "2.0.0",
+  "version": "2.2.0",
   "description": "聚合100+搜索引擎，支持AI、影视、学术等多领域搜索，自动解析与一键直达。",
   "icons": {
     "16": "assets/icon-16.png",
@@ -31,10 +31,20 @@
         "engines/parser/google.js",
         "engines/parser/bing.js",
         "engines/parser/baidu.js",
+        "engines/parser/yandex.js",
         "engines/parser/toutiao.js",
         "engines/parser/liumingye.js",
         "engines/parser/gatherfind.js",
         "engines/parser/sbkko.js",
+        "engines/parser/upyunso.js",
+        "engines/parser/pansearch.js",
+        "engines/parser/piratebay_1.js",
+        "engines/parser/piratebay_2.js",
+        "engines/parser/xcili.js",
+        "engines/parser/rarbg.js",
+        "engines/parser/quark_station.js",
+        "engines/parser/xiaoyu.js",
+        "engines/parser/bilibili.js",
         "content-scripts/parser.js"
       ],
       "run_at": "document_end"
