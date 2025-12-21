@@ -373,8 +373,10 @@ function switchView(viewName, updateHistory = true) {
  */
 function performSearch(mode) {
     const query = dom.searchInput.value.trim();
-    if (!query) {
-        showToast('请输入搜索关键词', 'warning');
+
+    // 逻辑调整：聚合搜索模式必须有关键词，一键直达模式允许关键词为空
+    if (!query && mode === 'fusion') {
+        showToast('聚合搜索需要输入关键词', 'warning');
         return;
     }
 
@@ -419,7 +421,10 @@ function performSearch(mode) {
             // 仅替换关键词占位符，不附加 sf_id 等参数。
             // 这样内容脚本就不会在这些标签页上激活，从而避免它们被后台服务自动关闭。
             const url = eng.url.replace('%s', encodeURIComponent(query));
-            chrome.tabs.create({ url, active: false });
+
+            // [新增逻辑] 当只有一个目标时，自动聚焦该标签页；否则保持在后台打开
+            const shouldActivate = targets.length === 1;
+            chrome.tabs.create({ url, active: shouldActivate });
         });
         showToast(`已为您打开 ${targets.length} 个页面`, 'success');
     } else { // 聚合搜索模式
