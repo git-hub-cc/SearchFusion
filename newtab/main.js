@@ -121,14 +121,10 @@ function renderEngineGrid(category) {
         let engines = state.config.engines[cat.value];
         if (!engines || engines.length === 0) return;
 
-        // [新增逻辑] 排序：将可聚合解析 (parsable !== false) 的引擎排在前面
-        // 使用 [...engines] 创建副本以免修改原始配置顺序
+        // 排序：将可聚合解析 (parsable !== false) 的引擎排在前面
         engines = [...engines].sort((a, b) => {
             const aParsable = a.parsable !== false;
             const bParsable = b.parsable !== false;
-            // 如果 a 可解析 b 不可，a 排前 (-1)
-            // 如果 a 不可解析 b 可，b 排前 (1)
-            // 否则保持原序 (0)
             if (aParsable && !bParsable) return -1;
             if (!aParsable && bParsable) return 1;
             return 0;
@@ -176,11 +172,10 @@ function renderEngineGrid(category) {
  */
 function getLocalEngineIcon(engineName) {
     if (!engineName) return '';
-    // 将引擎名称转换为安全的文件名格式 (例如 "今日头条" -> "今日头条.png")
     const filename = engineName
-        .replace(/[^\w\s\u4e00-\u9fa5]/g, '') // 移除特殊字符
+        .replace(/[^\w\s\u4e00-\u9fa5]/g, '')
         .trim()
-        .replace(/\s+/g, '_') // 空格转下划线
+        .replace(/\s+/g, '_')
         .toLowerCase();
     return `../assets/icons/${filename}.png`;
 }
@@ -193,12 +188,29 @@ function getLocalEngineIcon(engineName) {
 function getRemoteFavicon(targetUrl) {
     try {
         const domain = new URL(targetUrl.replace('%s', '')).hostname;
-        // 使用 Google 的公共 favicon 服务，稳定性高
         return `https://www.google.com/s2/favicons?domain=${domain}&sz=64`;
     } catch (e) {
-        // 如果 URL 解析失败，返回空字符串，后续由 `bindImageErrorFallback` 处理
         return '';
     }
+}
+
+/**
+ * 获取最佳匹配的图标 (优先本地，其次远程)
+ * @param {string} sourceName - 结果来源名称 (如 "B站", "Google")
+ * @param {string} itemUrl - 结果的 URL
+ */
+function getBestIcon(sourceName, itemUrl) {
+    // 1. 尝试匹配本地引擎图标
+    // 遍历所有配置的引擎，检查名称是否与来源一致
+    const allEngines = Object.values(state.config.engines).flat();
+    const matchedEngine = allEngines.find(e => e.name === sourceName);
+
+    if (matchedEngine) {
+        return getLocalEngineIcon(matchedEngine.name);
+    }
+
+    // 2. 如果没有匹配的本地引擎，回退到远程获取
+    return getRemoteFavicon(itemUrl);
 }
 
 // === 交互逻辑 (Controller) ===
@@ -207,7 +219,6 @@ function getRemoteFavicon(targetUrl) {
  * 绑定所有主要的UI事件监听器
  */
 function bindEvents() {
-    // 侧边栏分类点击事件
     dom.categoryList.addEventListener('click', (e) => {
         const item = e.target.closest('.nav-item');
         if (!item) return;
@@ -218,7 +229,6 @@ function bindEvents() {
         const cat = item.dataset.cat;
         state.currentCategory = cat;
         renderEngineGrid(cat);
-        // 如果当前在结果页，则返回到引擎选择页
         if (history.state?.view !== 'grid') {
             history.back();
         }
@@ -227,19 +237,16 @@ function bindEvents() {
         if (state.isMobile) toggleSidebar(false);
     });
 
-    // 移动端侧边栏控制
     dom.btnOpenSidebar.addEventListener('click', () => toggleSidebar(true));
     dom.btnCloseSidebar.addEventListener('click', () => toggleSidebar(false));
     dom.sidebarOverlay.addEventListener('click', () => toggleSidebar(false));
 
-    // 搜索按钮事件
     dom.btnLaunch.addEventListener('click', () => performSearch('launch'));
     dom.btnFusion.addEventListener('click', () => performSearch('fusion'));
     dom.searchInput.addEventListener('keydown', (e) => {
         if (e.key === 'Enter') performSearch('fusion');
     });
 
-    // 搜索框输入与清空
     dom.searchInput.addEventListener('input', (e) => {
         dom.btnClear.classList.toggle('hidden', !e.target.value.trim());
     });
@@ -249,7 +256,6 @@ function bindEvents() {
         dom.searchInput.focus();
     });
 
-    // 返回按钮与主题切换
     dom.btnBack.addEventListener('click', () => history.back());
     dom.themeBtn.addEventListener('click', toggleTheme);
 }
@@ -260,22 +266,23 @@ function bindEvents() {
 function bindImageErrorFallback() {
     document.addEventListener('error', (e) => {
         const target = e.target;
-        // 仅处理 class 包含 'engine-icon' 或 'res-icon' 的图片
         if (target && target.tagName === 'IMG') {
             if (target.classList.contains('engine-icon') || target.classList.contains('res-icon')) {
-                target.src = '../assets/default.svg';
+                // 如果是本地图标加载失败（可能名字匹配错误），尝试降级为远程图标
+                // 如果已经是默认图标则不再处理，防止死循环
+                if (!target.src.includes('default.svg')) {
+                    target.src = '../assets/default.svg';
+                }
             }
-            // 防止无限循环触发
             target.onerror = null;
         }
     }, true);
 }
 
 /**
- * 初始化浏览器历史记录管理，用于视图切换 (前进/后退)
+ * 初始化浏览器历史记录管理
  */
 function initHistory() {
-    // 初始状态为引擎网格视图
     history.replaceState({ view: 'grid' }, '', location.pathname);
     window.addEventListener('popstate', (event) => {
         if (event.state) {
@@ -284,10 +291,6 @@ function initHistory() {
     });
 }
 
-/**
- * 切换移动端侧边栏显示状态
- * @param {boolean} show - true为显示, false为隐藏
- */
 function toggleSidebar(show) {
     if (show) {
         dom.sidebar.classList.add('open');
@@ -298,11 +301,6 @@ function toggleSidebar(show) {
     }
 }
 
-/**
- * 切换引擎的选中状态
- * @param {object} engine - 引擎配置对象
- * @param {HTMLElement} cardElem - 被点击的引擎卡片元素
- */
 function toggleEngineSelection(engine, cardElem) {
     if (state.selectedEngines.has(engine.name)) {
         state.selectedEngines.delete(engine.name);
@@ -314,19 +312,12 @@ function toggleEngineSelection(engine, cardElem) {
     updateActionButtons();
 }
 
-/**
- * 更新操作按钮的角标数字
- * “一键直达”显示所有选中项的数量。
- * “聚合搜索”仅显示可解析的选中项数量。
- */
 function updateActionButtons() {
     const allEnginesFlat = Object.values(state.config.engines).flat();
     let parsableCount = 0;
 
-    // 遍历所有已选中的引擎
     state.selectedEngines.forEach(name => {
         const engine = allEnginesFlat.find(e => e.name === name);
-        // 如果引擎可解析 (parsable 属性不为 false)，则计数器加一
         if (engine && engine.parsable !== false) {
             parsableCount++;
         }
@@ -334,20 +325,13 @@ function updateActionButtons() {
 
     const launchCount = state.selectedEngines.size;
 
-    // 更新“聚合搜索”按钮
     dom.fusionCount.textContent = parsableCount;
     dom.fusionCount.classList.toggle('hidden', parsableCount === 0);
 
-    // 更新“一键直达”按钮
     dom.launchCount.textContent = launchCount;
     dom.launchCount.classList.toggle('hidden', launchCount === 0);
 }
 
-/**
- * 视图切换器
- * @param {string} viewName - 'grid' (引擎网格) 或 'results' (结果列表)
- * @param {boolean} [updateHistory=true] - 是否更新浏览器历史记录
- */
 function switchView(viewName, updateHistory = true) {
     if (viewName === 'results') {
         if (updateHistory && history.state?.view !== 'results') {
@@ -369,28 +353,32 @@ function switchView(viewName, updateHistory = true) {
 
 /**
  * 执行搜索操作
- * @param {'fusion' | 'launch'} mode - 'fusion'为聚合搜索, 'launch'为一键直达
+ * @param {'fusion' | 'launch'} mode
  */
 function performSearch(mode) {
     const query = dom.searchInput.value.trim();
 
-    // 逻辑调整：聚合搜索模式必须有关键词，一键直达模式允许关键词为空
     if (!query && mode === 'fusion') {
         showToast('聚合搜索需要输入关键词', 'warning');
         return;
     }
 
-    // 确定要搜索的目标引擎
     let targets = [];
     if (state.selectedEngines.size > 0) {
-        // 如果用户有选择，则使用用户选择的引擎
         const allEngines = Object.values(state.config.engines).flat();
         targets = allEngines.filter(e => state.selectedEngines.has(e.name));
     } else {
-        // 如果用户未选择，则使用当前分类下的前3个作为默认引擎
-        const defaultCategory = state.currentCategory === 'all' ? 'search' : state.currentCategory;
-        const pool = state.config.engines[defaultCategory] || [];
-        targets = pool.slice(0, 3);
+        if (mode === 'launch') {
+            showToast('请先选择至少一个搜索引擎', 'warning');
+            return;
+        } else {
+            const defaultCategory = state.currentCategory === 'all' ? 'search' : state.currentCategory;
+            const pool = state.config.engines[defaultCategory] || [];
+            targets = pool.slice(0, 3);
+            if (targets.length > 0) {
+                showToast(`未选择引擎，已为您使用默认引擎进行搜索`, 'info');
+            }
+        }
     }
 
     if (targets.length === 0) {
@@ -398,7 +386,6 @@ function performSearch(mode) {
         return;
     }
 
-    // 对聚合模式进行特殊处理，过滤掉不支持聚合的引擎
     if (mode === 'fusion') {
         const parsableTargets = targets.filter(eng => eng.parsable !== false);
         if (parsableTargets.length === 0) {
@@ -416,18 +403,15 @@ function performSearch(mode) {
     state.currentSearchId = searchId;
 
     if (mode === 'launch') {
+        // "一键直达"：前端直接创建标签页，不进行资源拦截
         targets.forEach(eng => {
-            // [核心修改] “一键直达”模式，构建不带追踪参数的干净URL。
-            // 仅替换关键词占位符，不附加 sf_id 等参数。
-            // 这样内容脚本就不会在这些标签页上激活，从而避免它们被后台服务自动关闭。
             const url = eng.url.replace('%s', encodeURIComponent(query));
-
-            // [新增逻辑] 当只有一个目标时，自动聚焦该标签页；否则保持在后台打开
             const shouldActivate = targets.length === 1;
             chrome.tabs.create({ url, active: shouldActivate });
         });
         showToast(`已为您打开 ${targets.length} 个页面`, 'success');
-    } else { // 聚合搜索模式
+    } else {
+        // "聚合搜索"：委托后台创建标签页，以便后台能及时应用资源拦截规则
         switchView('results');
         state.resultsPool = [];
         dom.resultsContainer.innerHTML = '';
@@ -438,46 +422,37 @@ function performSearch(mode) {
         dom.spinner.classList.remove('hidden');
         dom.statusText.textContent = `正在从 ${targets.length} 个来源聚合...`;
 
-        // 错开时间创建标签页，减轻浏览器瞬时压力
         targets.forEach((eng, index) => {
             setTimeout(() => {
                 const url = buildSearchUrl(eng, query, searchId);
-                chrome.tabs.create({ url, active: false });
-            }, index * 200); // 每隔200ms创建一个
+                // 向后台发送消息，请求创建并拦截资源
+                chrome.runtime.sendMessage({
+                    type: "CREATE_FUSION_TAB",
+                    url: url
+                });
+            }, index * 200);
         });
     }
 }
 
 // === 结果处理 ===
 
-/**
- * 监听 storage 变化，接收来自内容脚本的解析结果
- * @param {object} changes - 发生变化的数据
- * @param {string} area - 存储区域 ('local', 'sync')
- */
 function handleStorageChange(changes, area) {
     if (area !== 'local') return;
 
     for (let [key, { newValue }] of Object.entries(changes)) {
-        // 只处理属于当前搜索任务的结果
         if (!key.startsWith(`result_${state.currentSearchId}`)) continue;
         if (!newValue || newValue.length === 0) continue;
 
         renderResults(newValue);
-        // 读取后立即删除，避免数据残留
         chrome.storage.local.remove(key);
     }
 }
 
-/**
- * 渲染搜索结果到页面上
- * @param {Array<object>} newResults - 新的搜索结果数组
- */
 function renderResults(newResults) {
     dom.skeleton.classList.add('hidden');
     dom.emptyState.classList.add('hidden');
 
-    // 去重：只添加结果池中不存在的URL
     const validItems = newResults.filter(r => !state.resultsPool.some(pool => pool.url === r.url));
     if (validItems.length === 0) return;
 
@@ -488,11 +463,13 @@ function renderResults(newResults) {
     validItems.forEach(item => {
         const div = document.createElement('div');
         div.className = 'result-card';
-        const favicon = getRemoteFavicon(item.url);
+
+        // 优化：优先使用本地图标，提升视觉一致性
+        const iconSrc = getBestIcon(item.source, item.url);
 
         div.innerHTML = `
             <div class="res-badge">
-                <img src="${favicon}" class="res-icon">
+                <img src="${iconSrc}" class="res-icon" loading="lazy">
                 ${item.source}
             </div>
             <a href="${item.url}" class="res-title" target="_blank" rel="noopener noreferrer">${item.title}</a>
@@ -503,25 +480,18 @@ function renderResults(newResults) {
 
     dom.resultsContainer.appendChild(fragment);
 
-    // 更新状态栏信息
     dom.spinner.classList.add('hidden');
     dom.statusText.textContent = '聚合完成';
 }
 
 // === 辅助功能 ===
 
-/**
- * 显示一个短暂的通知（Toast）
- * @param {string} msg - 通知内容
- * @param {'info' | 'success' | 'warning' | 'error'} [type='info'] - 通知类型
- */
 function showToast(msg, type = 'info') {
     const toast = document.createElement('div');
     toast.className = `toast ${type}`;
     toast.textContent = msg;
     dom.toastContainer.appendChild(toast);
 
-    // 3秒后自动消失
     setTimeout(() => {
         toast.style.opacity = '0';
         toast.style.transform = 'translateY(20px)';
@@ -529,17 +499,11 @@ function showToast(msg, type = 'info') {
     }, 3000);
 }
 
-/**
- * 初始化并应用保存的主题（浅色/深色）
- */
 function initTheme() {
     const savedTheme = localStorage.getItem('theme') || 'light';
     document.body.dataset.theme = savedTheme;
 }
 
-/**
- * 切换并保存主题
- */
 function toggleTheme() {
     const currentTheme = document.body.dataset.theme;
     const nextTheme = currentTheme === 'light' ? 'dark' : 'light';

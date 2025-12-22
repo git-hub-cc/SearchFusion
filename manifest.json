@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "SearchFusion - 全能聚合搜索",
-  "version": "2.2.0",
+  "version": "2.3.0",
   "description": "聚合100+搜索引擎，支持AI、影视、学术等多领域搜索，自动解析与一键直达。",
   "icons": {
     "16": "assets/icon-16.png",
@@ -14,7 +14,8 @@
   "permissions": [
     "tabs",
     "scripting",
-    "storage"
+    "storage",
+    "declarativeNetRequest"
   ],
   "host_permissions": [
     "<all_urls>"
