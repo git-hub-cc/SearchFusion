@@ -118,16 +118,42 @@
             results = Engines.xcili.parse();
         } else if (hostname.includes('rargb.to') && Engines.rarbg) {
             results = Engines.rarbg.parse();
-        }  else if (hostname.includes('bilibili.com') && Engines.bilibili) {
+        } else if (hostname.includes('bilibili.com') && Engines.bilibili) {
             results = Engines.bilibili.parse();
         } else if (hostname.includes('pioz.cn') && Engines.quark_station) {
-            // [新增] 夸克小站
-            console.log('[SearchFusion] 使用 夸克小站 专用解析器');
             results = Engines.quark_station.parse();
         } else if (hostname.includes('xykmovie.com') && Engines.xiaoyu) {
-            // [新增] 小宇搜索
-            console.log('[SearchFusion] 使用 小宇搜索 专用解析器');
             results = Engines.xiaoyu.parse();
+        } else if (hostname.includes('rottentomatoes.com') && Engines.rottentomatoes) {
+            results = Engines.rottentomatoes.parse();
+        } else if (hostname.includes('imdb.com') && Engines.imdb) {
+            results = Engines.imdb.parse();
+        } else if (hostname.includes('cinematerial.com') && Engines.cinematerial) {
+            results = Engines.cinematerial.parse();
+        } else if (hostname.includes('filmaffinity.com') && Engines.filmaffinity) {
+            results = Engines.filmaffinity.parse();
+        } else if (hostname.includes('metacritic.com') && Engines.metacritic) {
+            results = Engines.metacritic.parse();
+        } else if (hostname.includes('iyf.lv') && Engines.iyf) {
+            results = Engines.iyf.parse();
+        } else if (hostname.includes('nivod.vip') && Engines.nivod) {
+            results = Engines.nivod.parse();
+        } else if (hostname.includes('dsxys.com') && Engines.dsxys) {
+            results = Engines.dsxys.parse();
+        } else if (hostname.includes('gimytv.ai') && Engines.gimy) {
+            results = Engines.gimy.parse();
+        } else if (hostname.includes('gj5.tv') && Engines.gj5) {
+            results = Engines.gj5.parse();
+        } else if (hostname.includes('yueyu2.com') && Engines.yueyu2) {
+            results = Engines.yueyu2.parse();
+        } else if (hostname.includes('acfun.cn') && Engines.acfun) {
+            results = Engines.acfun.parse();
+        } else if (hostname.includes('anime1.cc') && Engines.anime1) {
+            results = Engines.anime1.parse();
+        } else if (hostname.includes('xusou.cn') && Engines.xusou) {
+            results = Engines.xusou.parse();
+        } else if (hostname.includes('dmla8.com') && Engines.dmla8) {
+            results = Engines.dmla8.parse();
         } else if (Engines.generic) {
             // 兜底通用解析器
             console.log('[SearchFusion] 使用通用解析器');
@@ -158,6 +184,13 @@
             });
         } else {
             console.log(`[SearchFusion] 在 ${sourceKey} 未找到可解析的结果。`);
+            // 即使没有结果，也发送完成信号，以便后台服务可以关闭标签页
+            chrome.runtime.sendMessage({
+                type: 'EXTRACTION_COMPLETE',
+                source: sourceKey,
+                searchId: searchId,
+                count: 0
+            });
         }
     }
 
