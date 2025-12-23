@@ -70,9 +70,7 @@
       {"name": "酷库博客", "url": "https://www.zxki.cn/?keyword=%s", "proxy": false, "desc": "收录工具、软件、效率、资源等综合导航平台。", "parsable": true}
     ],
     "pan_search": [
-      {"name": "小云搜", "url": "https://www.yunso.net/index/user/s?wd=%s", "proxy": false, "desc": "专注于百度网盘资源的聚合搜索。", "parsable": false},
       {"name": "学霸盘", "url": "https://www.xuebapan.com/s/%s-1.html", "proxy": false, "desc": "侧重于考研、学习资料的网盘资源搜索。", "parsable": true},
-      {"name": "大力盘", "url": "https://www.dalipan.com/#/main/search?keyword=%s&restype=0", "proxy": true, "desc": "专业的网盘资源搜索工具，支持多网盘。", "parsable": false},
       {"name": "猫狸盘搜", "url": "https://www.alipansou.com/search?k=%s", "proxy": false, "desc": "专注于阿里云盘资源的第三方搜索。", "parsable": false},
       {"name": "大圣盘", "url": "https://www.dashengpan.com/#/main/search?keyword=%s&restype=0", "proxy": false, "desc": "综合性网盘搜索，资源更新较快。", "parsable": false},
       {"name": "pansearch", "url": "https://www.pansearch.me/search?keyword=%s&pan=aliyundrive", "proxy": true, "desc": "界面简洁的阿里云盘资源搜索引擎。", "parsable": true},
@@ -120,7 +118,6 @@
       {"name": "大师兄", "url": "https://dsxys.com/sb/kemksmaksdl7nhZe3c1-.html?wd=%s", "proxy": false, "desc": "老牌影视站，资源全且更新及时。", "parsable": true},
       {"name": "蛋蛋赞", "url": "https://www.ppnix.com/search/%s--.html", "proxy": false, "desc": "聚合全网影视资源，智能推荐线路。", "parsable": true},
       {"name": "韩饭网", "url": "https://www.hanfan.cc/?s=%s", "proxy": false, "desc": "专注于韩国娱乐、综艺与韩剧的资讯站。", "parsable": true},
-      {"name": "影猫の仓库", "url": "https://www.ymck.pro/search.html?wd=%s", "proxy": false, "desc": "只有 4K 高清资源的影视下载站。", "parsable": false},
       {"name": "港剧屋", "url": "https://www.gj5.tv/search/--/?wd=%s&submit=", "proxy": false, "desc": "专门收集最新与经典 TVB 港剧的网站。", "parsable": true},
       {"name": "爱港剧", "url": "https://www.yueyu2.com/search/-------------.html?wd=%s", "proxy": false, "desc": "专注于粤语港剧在线观看的平台。", "parsable": true},
       {"name": "电影先生", "url": "https://soupian.plus/movie/%s&from=dyxs-search", "proxy": false, "desc": "界面现代，适配多端的在线影视站。", "parsable": true}
@@ -128,15 +125,13 @@
     "anime": [
       {"name": "B站番剧", "url": "https://www.bilibili.com/search?keyword=%s&from_source=anime", "proxy": false, "desc": "国内最合法的新番、日漫中文正版播放平台。", "parsable": true},
       {"name": "腾讯动漫", "url": "https://v.qq.com/x/search/?q=%s&stype=0&filter=label%3Danime", "proxy": false, "desc": "提供部分正版日本动漫、动画电影资源。", "parsable": false},
-      {"name": "爱奇艺动漫", "url": "https://so.iqiyi.com/so/q_%s?source=anime", "proxy": false, "desc": "正版新番、国漫与动画电影合集。", "parsable": false},
       {"name": "Netflix", "url": "https://www.netflix.com/search?q=%s", "proxy": false, "desc": "全球最大的正版动漫片库之一，拥有大量独家版权。", "parsable": false},
       {"name": "ACFUN", "url": "https://www.acfun.cn/search?keyword=%s", "proxy": false, "desc": "硬核二次元聚集地，拥有众多独家番剧。", "parsable": true},
       {"name": "樱花动漫", "url": "https://yhdmoe.com/search?q=%s", "proxy": false, "desc": "资源最全的老牌在线动漫网站之一。", "parsable": true},
       {"name": "anime1", "url": "https://anime1.cc/search?q=%s", "proxy": false, "desc": "界面极简的动漫站，专注于番剧播放。", "parsable": true},
       {"name": "搜片", "url": "https://soupian.pro/movie/%s", "proxy": false, "desc": "聚合搜索全网影视与动漫资源。", "parsable": true},
       {"name": "许搜", "url": "https://www.xusou.cn/s/%s.html", "proxy": false, "desc": "综合性资源搜索，涵盖动漫与剧集。", "parsable": true},
-      {"name": "风车动漫", "url": "https://www.dmla8.com/search/-------------.html?wd=%s", "proxy": false, "desc": "经典的在线动漫观看网站，资源库庞大。", "parsable": true},
-      {"name": "Mikan", "url": "https://mikanani.me/Home/Search?searchstr=%s", "proxy": true, "desc": "蜜柑计划，最全的新番 BT 下载索引页, 响应太大，AI不好解析。", "parsable": false}
+      {"name": "风车动漫", "url": "https://www.dmla8.com/search/-------------.html?wd=%s", "proxy": false, "desc": "经典的在线动漫观看网站，资源库庞大。", "parsable": true}
     ],
     "sports": [
       {"name": "虎牙直播", "url": "https://www.huya.com/search?hsk=%s", "proxy": false, "desc": "以游戏直播为主，涵盖各类体育赛事直播。", "parsable": false},
